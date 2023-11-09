@@ -1,0 +1,161 @@
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title"></h4>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="formulario">
+              <div class="row">
+                <div class="col-md-4">
+                  <select formControlName="aeropuertoOrigen" (change)="aplicarFiltros()" class="form-control">
+                    <option *ngFor="let aeropuerto of datosAereopuerto" [value]="aeropuerto.idAereopuerto">{{ aeropuerto.nombreAereopuerto }}</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+
+                  <select formControlName="aeropuertoDestino" (change)="aplicarFiltros()" class="form-control">
+                    <option *ngFor="let aeropuerto of datosAereopuerto" [value]="aeropuerto.idAereopuerto">{{ aeropuerto.nombreAereopuerto }}</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+
+                  <select formControlName="aerolinea" (change)="aplicarFiltros()" class="form-control">
+                    <option *ngFor="let aereolinea of datosAereolinea" [value]="aereolinea.idAereolinea">{{ aereolinea.nombreAereolinea }}</option>
+                  </select>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                    <button class="btn btn-sm btn-outline-success" type="button" (click)="limpiarSeleccion()">Limpiar</button>
+                </div>
+              </div>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title"> Vuelos Disponibles</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th>
+                    # Vuelo
+                  </th>
+                  <th>
+                    Origen
+                  </th>
+                  <th>
+                    Destino
+                  </th>
+                  <th>
+                    Salida
+                  </th>
+                  <th>
+                    Llegada
+                  </th>
+                  <th>
+                  </th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let vuelo of datosVuelosFilter">
+                    <td>{{ vuelo.numeroVuelo }}</td>
+                    <td>{{ vuelo.idOrigen.nombreAereopuerto }}</td>
+                    <td>{{ vuelo.idDestino.nombreAereopuerto }}</td>
+                    <td>{{ vuelo.fechaSalida | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td>{{ vuelo.fechaLlegada | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td><button class="btn btn-sm btn-outline-success btn-round btn-icon" title="Disponibilidad" (click)="verDisponibilidad(vuelo.idVuelo)"><i class="nc-icon nc-tile-56"></i></button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title"> Selecciona un asiento</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <form [formGroup]="formulario">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <select formControlName="cliente" class="form-control">
+                        <option *ngFor="let cliente of datosClientes" [value]="cliente.idUsuario">{{ cliente.nombre }} {{cliente.apellidos}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="avion">
+                  <div class="cabina">
+                    <span>Cabina De Mando</span>
+                  </div><br>
+                  <div *ngFor="let reserva of datosReserva">
+                    <ng-container *ngFor="let fila of Array(reserva.idAvion.numeroFilas).fill(''); let i = index">
+                      <div class="fila">
+                        <ng-container *ngFor="let asiento of Array(reserva.idAvion.numeroAsientos+2).fill(''); let j = index">
+                          <button class="asiento" [class.pasillo]="(j + 1) % 5 === 0" [class.ocupado]="esAsientoOcupado(reserva, i + 1, j + 1)" (click)="open(content,i + 1, j + 1)">
+                            {{ (j + 1) % 5 === 0 ? '' : ((i + 1) + '-' + (j + 1)) }}
+                          </button>
+                        </ng-container>
+                      </div>
+                    </ng-container><br>
+                  </div>
+                  
+                  <div class="cola">
+                    <span>Sección De Cola</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #content let-modal>
+	<div class="modal-header">
+    
+	</div>
+	<div class="modal-body">
+		¿Quieres reservar el asiento {{ asientoReserva }} de la fila {{ filaReserva }}?
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('')">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="crearReserva()">Confirmar</button>
+	</div>
+</ng-template>

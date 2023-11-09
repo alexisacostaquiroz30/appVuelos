@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="card-title">Selecciona un cliente.</h6>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="formulario">
+              <div class="row">
+                <div class="col-md-4">
+                  <select formControlName="cliente" (change)="cambioCliente()" class="form-control">
+                    <option *ngFor="let cliente of datosClientes" [value]="cliente.idUsuario">{{ cliente.nombre }} {{cliente.apellidos}}</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Lista De Reservas</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th>
+                    # Vuelo
+                  </th>
+                  <th>
+                    Origen
+                  </th>
+                  <th>
+                    Destino
+                  </th>
+                  <th>
+                    Salida
+                  </th>
+                  <th>
+                    Llegada
+                  </th>
+                  <th>
+                    # Asiento
+                  </th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let reserva of datosReservas">
+                    <td>{{ reserva.idVuelo2.numeroVuelo }}</td>
+                    <td>{{ reserva.idVuelo2.idOrigen.nombreAereopuerto }}</td>
+                    <td>{{ reserva.idVuelo2.idDestino.nombreAereopuerto }}</td>
+                    <td>{{ reserva.idVuelo2.fechaSalida | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td>{{ reserva.idVuelo2.fechaLlegada | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td>Fi {{ reserva.numeroFila }}-As {{ reserva.numeroAsiento }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
